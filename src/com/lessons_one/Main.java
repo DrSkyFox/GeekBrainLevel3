@@ -1,5 +1,6 @@
 package com.lessons_one;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
@@ -7,7 +8,28 @@ public class Main {
 
 
     public static void main(String[] args) {
+
+        task1();
+
+        task2();
+
         task3();
+    }
+
+    private static void task2() {
+        String[] strings = new String[] {"Hold", "WinterHolm", "Ragnos", "ArizoneSunShine"};
+        ArrayList<String> strings1 = MyArrays.toArrayList(strings);
+        for (String str: strings1
+             ) {
+            System.out.println(str);
+        }
+    }
+
+    private static void task1() {
+        Integer[] integers = new Integer[] {1, 2, 3, 4 ,5};
+        System.out.println(Arrays.toString(integers));
+        MyArrays.sweep(integers, 2, 4);
+        System.out.println(Arrays.toString(integers));
     }
 
     private static void task3() {

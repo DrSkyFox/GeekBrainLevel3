@@ -36,6 +36,7 @@ public class Box<T extends Fruit> implements Comparable<Box>, BoxInterface<T> {
 
 
     public void transferAllTo(Box b) {
+        logger.info("transferAllTo: " + String.valueOf(type !=b.type));
         if(type !=b.type) {
             throw  new DifferentBoxFruitsException("Different class type");
         }
