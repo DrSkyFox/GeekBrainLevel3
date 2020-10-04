@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 public class ConnectionSet {
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
     private Socket socket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
@@ -38,5 +38,27 @@ public class ConnectionSet {
 
     public DataOutputStream getDataOutputStream() {
         return dataOutputStream;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void close() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            dataOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            dataInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

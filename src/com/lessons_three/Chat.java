@@ -1,14 +1,12 @@
 package com.lessons_three;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class Chat implements ChatInterface {
-    Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private ConnectionSet connectionSet;
     private String chatName;
     private DataOutputStream out;
     private DataInputStream in;
@@ -16,10 +14,9 @@ public class Chat implements ChatInterface {
     private FileOutputStream fileOutputStream;
     private Scanner scanner;
 
-
     public Chat(String chatName) {
         this.chatName = chatName;
-        ConnectionSet connectionSet = new ConnectionSet("localhost", 8888);
+        connectionSet = new ConnectionSet("localhost", 8888);
         out = connectionSet.getDataOutputStream();
         in = connectionSet.getDataInputStream();
 
@@ -27,12 +24,12 @@ public class Chat implements ChatInterface {
     }
 
     private void init() {
-        messages = new ArrayList<>();
+        messages = Collections.synchronizedList(new ArrayList<>());
         scanner = new Scanner(System.in);
         readFileMsg(100);
         System.out.println(messages.toString());
         try {
-            fileOutputStream = new FileOutputStream("test.txt");
+            fileOutputStream = new FileOutputStream("test.txt",true);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -82,11 +79,17 @@ public class Chat implements ChatInterface {
         Thread threadReadStream = new Thread(new Runnable() {
             @Override
             public void run() {
+                String str = null;
                 while (true) {
                     try {
+                        str = in.readUTF();
                         readMsgFromStream(in.readUTF());
+                        if (str.contains("exit")) {
+                            break;
+                        }
                     } catch (IOException e) {
-                        readMsgFromStream("Stream is out: " + e.getMessage());
+                        System.out.println("Stream is out: " + e.getMessage());
+                        break;
                     }
                 }
             }
@@ -104,8 +107,13 @@ public class Chat implements ChatInterface {
                         str = scanner.nextLine();
                         out.writeUTF(str);
                         readMsgFromStream(str);
+                        if(str.equals("exit")) {
+                            connectionSet.close();
+                            break;
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
+                        break;
                     }
                 }
             }
@@ -121,6 +129,14 @@ public class Chat implements ChatInterface {
             e.printStackTrace();
         }
         System.out.println(msg);
+    }
+
+    private void close() {
+        try {
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
