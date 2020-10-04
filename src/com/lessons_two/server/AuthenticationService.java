@@ -3,24 +3,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
+
 import com.lessons_two.server.interfaces.AuthInterface;
 
 
 public class AuthenticationService {
-
+    Logger  logger = Logger.getLogger(this.getClass().getName());
 
 
     public Client logIN(String login, String pass) {
         Connection connection = null;
         try {
             connection = connection = ConnectionFactory.getInstance();
-            PreparedStatement statement = connection.prepareStatement("select login, password, nickname from users as u where login = ? and password = ?");
+            PreparedStatement statement = connection.prepareStatement("select id, login, password, nickname from users as u where login = ? and password = ?");
             statement.setString(1,login);
             statement.setString(2,pass);
             ResultSet resultSet = statement.executeQuery();
+
             if(resultSet.next()) {
+                logger.info(String.format("Connected client info : id - %s, login - %s, password  - %s , nickname - %s",
+                        resultSet.getInt(1), resultSet.getString(2),
+                        resultSet.getString(3),resultSet.getString(4)));
                 System.out.println(resultSet.getString(1));
-                return new Client(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3));
+                return new Client(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4));
             }
             return null;
         } catch (SQLException e) {
@@ -42,13 +52,17 @@ public class AuthenticationService {
         Connection connection = null;
         try {
             connection = connection = ConnectionFactory.getInstance();
-
-            PreparedStatement statement = connection.prepareStatement("update users set nickname = ? where login = ?");
+            logger.info(String.format("NewName is : %s , id_client is : %s",newName ,client.getiD_Client()));
+            PreparedStatement statement = connection.prepareStatement("update users set nickname = ? where id = ?");
             statement.setString(1, newName);
-            statement.setString(2, client.getName());
-            statement.executeUpdate();
-
-            return client.getName();
+            statement.setInt(2, client.getiD_Client());
+            logger.info("Going execute");
+            int count = statement.executeUpdate();
+            logger.info(String.format("Count result %s",count));
+            if(count > 0) {
+                return newName;
+            }
+           return null;
         } catch (SQLException e) {
             throw new RuntimeException("Something went wrong during DB-query");
         } finally {
@@ -92,14 +106,16 @@ public class AuthenticationService {
 
 
     static public class Client {
+        private int iD;
         private String login;
         private String password;
         private String name;
 
-        public Client(String login, String password, String name) {
+        public Client(int iD, String login, String password, String name) {
             this.login = login;
             this.password = password;
             this.name = name;
+            this.iD = iD;
         }
 
         public String getLogin() {
@@ -112,6 +128,10 @@ public class AuthenticationService {
 
         public String getName() {
             return name;
+        }
+
+        public int getiD() {
+            return iD;
         }
     }
 }

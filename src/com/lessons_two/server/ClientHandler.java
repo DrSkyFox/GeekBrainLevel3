@@ -5,12 +5,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.*;
+import java.util.logging.Logger;
 
 /**
  * Represents client session
  */
 public class ClientHandler {
+    Logger logger = Logger.getLogger(this.getClass().getName());
     private String name;
+    private int iD_Client;
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -26,7 +29,9 @@ public class ClientHandler {
         ClientHandler.timeOutSeconds = timeOutSeconds;
     }
 
-
+    public int getiD_Client() {
+        return iD_Client;
+    }
 
     public ClientHandler(Socket socket, Server server, ExecutorService executorService) {
         this.socket = socket;
@@ -82,8 +87,12 @@ public class ClientHandler {
                         );
                 if (maybeClient != null) {
                     if (!server.checkLogin(maybeClient.getName())) {
+                        logger.info(String.format("Connected client info : id - %s, login - %s, password  - %s , nickname - %s",
+                                maybeClient.getiD(), maybeClient.getLogin(), maybeClient.getPassword(), maybeClient.getName()
+                        ));
                         sendMessage("status: authok");
                         name = maybeClient.getName();
+                        iD_Client = maybeClient.getiD();
                         server.broadcast(String.format("%s came in", name));
                         System.out.println("Client auth completed");
                         server.subscribe(this);

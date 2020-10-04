@@ -17,7 +17,7 @@ public class ClienAppThree {
                 @Override
                 public void run() {
                     int key = 1;
-                    while (true) {
+                    while (key == 1) {
                         try {
                             String message = in.readUTF();
                             System.out.println(message);
@@ -26,7 +26,7 @@ public class ClienAppThree {
                                 out.writeUTF("-auth l3 p3");
                             }
                             if(key == 1) {
-                                out.writeUTF("/changeName Set");
+                                out.writeUTF("/changeName SetGeteer");
                                 key = 0;
                             }
                             out.writeUTF("Fine! Let the rock off begin! Ah ha ha ha ha ha ha!\n" +
