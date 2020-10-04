@@ -2,6 +2,7 @@ package com.lessons_three;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -21,17 +22,23 @@ public class Chat implements ChatInterface {
         ConnectionSet connectionSet = new ConnectionSet("localhost", 8888);
         out = connectionSet.getDataOutputStream();
         in = connectionSet.getDataInputStream();
-        messages = new ArrayList<>();
+
         init();
     }
 
     private void init() {
+        messages = new ArrayList<>();
+        scanner = new Scanner(System.in);
         readFileMsg(100);
+        System.out.println(messages.toString());
         try {
             fileOutputStream = new FileOutputStream("test.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        threadReadMsg();
+        threadSendMsg();
     }
 
     private void readFileMsg(int count_lines) {
@@ -84,6 +91,7 @@ public class Chat implements ChatInterface {
                 }
             }
         });
+        threadReadStream.start();
     }
 
     private void threadSendMsg() {
@@ -102,6 +110,7 @@ public class Chat implements ChatInterface {
                 }
             }
         });
+        threadSendStream.start();
     }
 
     synchronized private void readMsgFromStream(String msg) {
