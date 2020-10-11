@@ -10,7 +10,7 @@ public class Chat implements ChatInterface {
     private String chatName;
     private DataOutputStream out;
     private DataInputStream in;
-    private List<String> messages;
+    private Vector<String>  messages;
     private FileOutputStream fileOutputStream;
     private Scanner scanner;
 
@@ -24,7 +24,7 @@ public class Chat implements ChatInterface {
     }
 
     private void init() {
-        messages = Collections.synchronizedList(new ArrayList<>());
+        messages = new Vector<>();
         scanner = new Scanner(System.in);
         readFileMsg(100);
         System.out.println(messages.toString());
@@ -57,8 +57,7 @@ public class Chat implements ChatInterface {
                 builder.append(ch);
             }
             builder.reverse();
-
-            messages = List.of(builder.toString().split("\n"));
+            messages.addAll(List.of(builder.toString().split("\n")));
         } catch (FileNotFoundException e) {
             try {
                 new File("test.txt").createNewFile();

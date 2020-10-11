@@ -7,13 +7,21 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Logger;
 
 public class Server {
     private Set<ClientHandler> clientHandlers;
     private AuthenticationService authenticationService;
-    private ExecutorService executorService = Executors.newFixedThreadPool(3);
+    private ExecutorService services;
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public Server() {
+    public ExecutorService getServices() {
+        return services;
+    }
+
+    public Server(ExecutorService services) {
+        this.services = services;
         this.clientHandlers = new HashSet<>();
         this.authenticationService = new AuthenticationService();
         start(8888);
@@ -36,12 +44,13 @@ public class Server {
     }
 
     private void listenClients(ServerSocket serverSocket) throws IOException {
-        while (true) {
+        while (!serverSocket.isClosed()) {
             System.out.println("Server is looking for a client...");
             Socket client = serverSocket.accept();
             System.out.println("Client accepted: " + client);
-            new ClientHandler(client, this, executorService);
+            services.execute(new ClientHandler(client, this));
         }
+        services.shutdown();
     }
 
     public synchronized void broadcast(ClientHandler clientHandler, String incomingMessage) {

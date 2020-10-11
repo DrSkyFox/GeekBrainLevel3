@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /**
  * Represents client session
  */
-public class ClientHandler {
+public class ClientHandler implements Runnable {
     Logger logger = Logger.getLogger(this.getClass().getName());
     private String name;
     private int iD_Client;
@@ -33,13 +33,12 @@ public class ClientHandler {
         return iD_Client;
     }
 
-    public ClientHandler(Socket socket, Server server, ExecutorService executorService) {
+    public ClientHandler(Socket socket, Server server) {
         this.socket = socket;
-        this.executorService = executorService;
+        this.executorService = server.getServices();
         try {
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
-            start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,22 +53,38 @@ public class ClientHandler {
         this.name = name;
     }
 
-    public void start() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    auth();
-                    readMessage();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (AuthTimeOutException e) {
-                    e.printStackTrace();
-                } finally {
-                    closeConnection();
-                }
-            }
-        }).start();
+//    public void start() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    auth();
+//                    readMessage();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (AuthTimeOutException e) {
+//                    server.broadcast("Время авторитизации истекло");
+//                    e.printStackTrace();
+//                } finally {
+//                    closeConnection();
+//                }
+//            }
+//        }).start();
+//    }
+
+    @Override
+    public void run() {
+        try {
+            auth();
+            readMessage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (AuthTimeOutException e) {
+            this.sendMessage("Time expired for auth");
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
     }
 
     public Boolean authenticate() throws IOException {
