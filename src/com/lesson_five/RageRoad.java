@@ -11,12 +11,14 @@ public class RageRoad {
                 new Bus(fuelStation),
                 new Bus(fuelStation),
                 new Bus(fuelStation),
-                new Car(fuelStation),
-                new Car(fuelStation),
-                new Car(fuelStation),
-                new Car(fuelStation),
-                new Track(fuelStation),
-                new Track(fuelStation),
+                new Bus(fuelStation),
+                new Bus(fuelStation),
+//                new Car(fuelStation),
+//                new Car(fuelStation),
+//                new Car(fuelStation),
+//                new Car(fuelStation),
+//                new Track(fuelStation),
+//                new Track(fuelStation),
         };
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         for (Runnable run: runnables

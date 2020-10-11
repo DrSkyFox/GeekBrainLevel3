@@ -16,6 +16,7 @@ public class FuelStation implements Refuelable {
     @Override
     public boolean getRefueling(Refuelable refuelable) {
         try {
+            System.out.println("The " + refuelable.getName() + " has enter to fuelplace");
             semaphore.acquire();
             System.out.println("Start refueling: " + refuelable.getName());
             Thread.sleep(6000);
