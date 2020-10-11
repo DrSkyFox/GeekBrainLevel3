@@ -50,7 +50,7 @@ public class Track implements Runnable, Refuelable{
                 e.printStackTrace();
             }
             if(curVolume - ratePerTick < 0) {
-                System.out.println(getName() + " dont hava a fuel going to fuel station");
+                System.out.println(getName() + " dont have a fuel going to fuel station");
                 getRefueling(fuelStation);
                 curCircle++;
                 if(curCircle == max_circle) {
