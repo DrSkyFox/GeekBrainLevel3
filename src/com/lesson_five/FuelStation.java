@@ -20,6 +20,7 @@ public class FuelStation implements Refuelable {
             semaphore.acquire();
             System.out.println("Start refueling: " + refuelable.getName());
             Thread.sleep(6000);
+            System.out.println("Refueling fineshed fo : " + refuelable.getName());
             semaphore.release();
         } catch (InterruptedException e) {
             e.printStackTrace();
