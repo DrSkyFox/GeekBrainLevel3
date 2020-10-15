@@ -28,13 +28,17 @@ public class SomeClass {
            logger.info(String.format("Id= %s ElementVal = %s", i, inArray[i+pos]));
            outArray[i] = inArray[i+pos+1];
        }
-
+        logger.info("outArray" +Arrays.toString(outArray));
         return outArray;
     }
 
 
 
     private static int checkFour(int[] inArray) {
+        if(inArray == null) {
+            return -1;
+        }
+
         int pos = -1;
 
         for (int i = inArray.length-1; i>=0; i--) {
