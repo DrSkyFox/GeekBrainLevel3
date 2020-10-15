@@ -1,6 +1,8 @@
 package com.lesson_six;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,6 +30,15 @@ public class SomeClassTest {
                 Arguments.arguments(new int[] {3,6,7,1,4}, null)
         );
     }
+
+    @Test
+    public void doTestGetLastAfterFourException() {
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            SomeClass.getLastAfterFour(new int[] {1,2,3,6,7,8});
+        });
+    }
+
+
 
     @ParameterizedTest
     @MethodSource("getCheckOneFour")
