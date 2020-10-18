@@ -18,7 +18,7 @@ public class TestingClass {
         System.out.println("Call m3 with priority 4");
     }
     @Test(priority = 2)
-    public void method4() {
+    private void method4() {
         System.out.println("Call m4 with priority 2");
     }
     @AfterSuite

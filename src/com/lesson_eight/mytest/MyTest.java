@@ -49,6 +49,7 @@ public class MyTest {
     private static void invokeMethods(Method method, Object object) {
         if (Modifier.isPrivate(method.getModifiers())) {
             method.setAccessible(true);
+            System.out.println(String.format("Method: %s is accessible now", method.getName()));
         }
         try {
             method.invoke(object);
