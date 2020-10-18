@@ -1,6 +1,5 @@
 package com.lesson_eight.mytest;
 
-import com.lesson_five.Car;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -45,9 +44,6 @@ public class MyTest {
              ) {
             invokeMethods(method, object);
         }
-
-
-
     }
 
     private static void invokeMethods(Method method, Object object) {
@@ -63,6 +59,7 @@ public class MyTest {
         }
     }
 
+
     /**
      * Check After
      * @param aClass
@@ -75,7 +72,7 @@ public class MyTest {
             }
         }
         if(cAfter == 0) {
-            throw new RuntimeException("Annotation @AfterSuite not found");
+            throw new RuntimeException(String.format("Annotation @AfterSuite not found in claas %s", aClass.getName()));
         }
         if(cAfter > 1) {
             throw new RuntimeException(String.format("More than one @AfterSuite annotation is defined in the %s class", aClass.getName()));
@@ -94,7 +91,7 @@ public class MyTest {
             }
         }
         if(cBefore == 0) {
-            throw new RuntimeException("Annotation @BeforeSuite not found");
+            throw new RuntimeException(String.format("Annotation @BeforeSuite not found in class %s", aClass.getName()));
         }
         if(cBefore > 1) {
             throw new RuntimeException(String.format("More than one @BeforeSuite annotation is defined in the %s class", aClass.getName()));
